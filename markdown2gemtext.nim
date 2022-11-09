@@ -43,5 +43,13 @@ proc markdown2gemtext(path: string): string =
   defer:
     close(file)
   let html = markdown(file.readAll())
+  result = html
+             .replaceHeaders(1)
+             .replaceHeaders(2)
+             .replaceHeaders(3)
+             .replaceLists
+             .replaceQuotes
+             .replaceLinks
+  
 
-discard markdown2gemtext("sample/sample.md")
+echo markdown2gemtext("sample/sample.md")
