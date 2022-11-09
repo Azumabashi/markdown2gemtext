@@ -29,6 +29,7 @@ proc replaceQuotes(content: string): string =
     var parsed = quote.replace(re"</?blockquote>\n?", "").replace(re"<p>((.|\n)*)</p>", proc (m: RegexMatch): string = 
       return fmt"> {m.captures[0]}"
     ).replace("\n", "\n> ")
+    parsed = parsed[0 ..< parsed.len - 2]  # remove last line of ">\n"
     result = result.replace(quote, parsed)
 
 proc replaceLinks(rawContent: string): string =
