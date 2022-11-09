@@ -3,6 +3,7 @@ import markdown
 import re
 import strformat
 import strutils
+import uri
 
 var linkId = 1
 
@@ -29,7 +30,7 @@ proc replaceLinks(rawContent: string): string =
   var contents = rawContent.split("\n")
   let regex = re("(.*)<a href=\"(.*)\">(.*)</a>(.*)")
   for i in 0..<contents.len:
-    if contents[i].match(regex):
+    while contents[i].match(regex):
       contents[i] = contents[i].replacef(regex, fmt"$1$3[{linkId}]$4\n=> $2 {linkId}: $2\n")
       linkId += 1
   result = contents.join("\n")
