@@ -33,15 +33,24 @@ proc replaceQuotes(content: string): string =
     result = result.replace(quote, parsed)
 
 proc replaceLinks(rawContent: string): string =
-  var contents = rawContent.split("\n")
-  let regex = re("(.*)<a href=\"(.*)\">(.*)</a>(.*)")
+  var 
+    contents = rawContent.split("\n")
+    links: seq[string] = @[]
+    isMatched = false
+  let regex = re("(.*?)<a href=\"(.*?)\">(.*?)</a>(.+)")
   for i in 0..<contents.len:
+    isMatched = false
+    links = @[]
     while contents[i].match(regex).isSome:
+      isMatched = true
       contents[i] = contents[i].replace(regex, proc (m: RegexMatch): string = 
-        let match = m.match
-        return fmt"{match[0]}{match[3]}[{linkId}]{match[4]}\n=> {match[2]} {linkId}: {match[2]}\n"
+        let match = m.captures
+        links.add(fmt"=> {match[1]} {linkId}: {match[1]}")
+        return fmt"{match[0]}{match[2]}[{linkId}]{match[3]}"
       )
       linkId += 1
+    if isMatched:
+      contents[i] = contents[i] & "\n" & links.join("\n") & "\n"
   result = contents.join("\n")
 
 proc removePTag(content: string): string =
