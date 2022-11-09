@@ -51,6 +51,12 @@ proc markdown2gemtext(path: string): string =
              .replaceQuotes
              .replaceLinks
              .removePTag
-  
 
-echo markdown2gemtext("sample/sample.md")
+if isMainModule:
+  for target in os.commandLineParams():
+    let result = markdown2gemtext(target)
+    var file = open("html/" & target.replacef(re"(.*\.)md", "$1gmi"), FileMode.fmWrite)
+    defer:
+      close(file)
+    file.writeLine(result)
+    echo target, " converted!"
