@@ -50,6 +50,7 @@ proc markdown2gemtext(path: string): string =
              .replaceLists
              .replaceQuotes
              .replaceLinks
+             .removePTag
   
 
 echo markdown2gemtext("sample/sample.md")
