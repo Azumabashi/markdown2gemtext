@@ -10,6 +10,10 @@ proc replaceHeaders(content: string, level: int): string =
     endSymbol = fmt"</h{level}>"
   result = content.replacef(re(fmt"{beginSymbol}(.*){endSymbol}"), "* $1")
 
+proc replaceLists(content: string): string =
+  result = content.replacef(re("<li>(.*)</li>"), "* $1")
+  result = result.replace("<ul>", "").replace("</ul>", "")
+
 proc markdown2gemtext(path: string): string =
   var file = open(path, FileMode.fmRead)
   defer:
