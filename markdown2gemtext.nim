@@ -77,7 +77,7 @@ if isMainModule:
     let
       result = markdown2gemtext(target)
       savePath = "gemtext/" & target.replace(re"(.*\.)md", proc (m: RegexMatch): string = 
-        return fmt"{m.match}.gmi"
+        return fmt"{m.captures[0]}gmi"
       )
       dirPath = splitFile(savePath).dir
     createDir(dirPath)
