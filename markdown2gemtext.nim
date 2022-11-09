@@ -31,7 +31,7 @@ proc replaceQuotes(content: string): string =
     parsed = parsed[0 ..< parsed.len - 2]  # remove last line of ">\n"
     result = result.replace(quote, parsed)
 
-proc replaceLinks(rawContent: string): string =
+proc replaceLinks(rawContent: string, filepath: string): string =
   var 
     contents = rawContent.split("\n")
     links: seq[string] = @[]
@@ -43,11 +43,15 @@ proc replaceLinks(rawContent: string): string =
     while contents[i].match(regex).isSome:
       isMatched = true
       contents[i] = contents[i].replace(regex, proc (m: RegexMatch): string = 
+        let match = m.captures
+        var address = match[1]
         let 
-          match = m.captures
-          isLink2Gemini = match[1].endsWith(".gmi") or match[1].startsWith("gemini://")
+          refersTo = splitFile(filepath).dir & "/" & address[1..<address.len-1] & ".md"
+          isLink2Gemini = match[1].endsWith(".gmi") or match[1].startsWith("gemini://") or refersTo in commandLineParams()
           protocolShow = if not isLink2Gemini: " (out of gemini)" else: ""
-        links.add(fmt"=> {match[1]} {linkId}: {match[1]}{protocolShow}")
+        if isLink2Gemini:
+          address = address[0..<address.len-1] & ".gmi"
+        links.add(fmt"=> {address} {linkId}: {address}{protocolShow}")
         return fmt"{match[0]}{match[2]}[{linkId}]{match[3]}"
       )
       linkId += 1
@@ -71,7 +75,7 @@ proc markdown2gemtext(path: string): string =
              .replaceHeaders(3)
              .replaceLists
              .replaceQuotes
-             .replaceLinks
+             .replaceLinks(path)
              .removePTag
 
 if isMainModule:
