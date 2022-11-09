@@ -53,8 +53,12 @@ proc markdown2gemtext(path: string): string =
 
 if isMainModule:
   for target in os.commandLineParams():
-    let result = markdown2gemtext(target)
-    var file = open("html/" & target.replacef(re"(.*\.)md", "$1gmi"), FileMode.fmWrite)
+    let
+      result = markdown2gemtext(target)
+      savePath = "gemtext/" & target.replacef(re"(.*\.)md", "$1gmi")
+      dirPath = splitFile(savePath).dir
+    createDir(dirPath)
+    var file = open(savePath, FileMode.fmWrite)
     defer:
       close(file)
     file.writeLine(result)
