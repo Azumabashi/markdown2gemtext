@@ -4,6 +4,8 @@ import re
 import strformat
 import strutils
 
+var linkId = 1
+
 proc replaceHeaders(content: string, level: int): string =
   let
     beginSymbol = fmt"<h{level}>"
@@ -24,11 +26,19 @@ proc replaceQuotes(content: string): string =
     parsed = parsed[0 ..< parsed.len - 2]  # remove last line of ">\n"
     result = result.replace(quote, parsed)
 
+proc replaceLinks(rawContent: string): string =
+  var contents = rawContent.split("\n")
+  let regex = re("(.*)<a href=\"(.*)\">(.*)</a>(.*)")
+  for i in 0..<contents.len:
+    if contents[i].match(regex):
+      contents[i] = contents[i].replacef(regex, fmt"$1$3[{linkId}]$4\n=> $2 {linkId}: $2\n")
+      linkId += 1
+  result = contents.join("\n")
+
 proc markdown2gemtext(path: string): string =
   var file = open(path, FileMode.fmRead)
   defer:
     close(file)
   let html = markdown(file.readAll())
-  discard html.replaceQuotes
 
 discard markdown2gemtext("sample/sample.md")
