@@ -11,7 +11,7 @@ proc replaceHeaders(content: string, level: int): string =
     beginSymbol = fmt"<h{level}>"
     endSymbol = fmt"</h{level}>"
     leading = "#".repeat(level)
-  result = content.replacef(re(fmt"{beginSymbol}(.*){endSymbol}"), "{leading} $1")
+  result = content.replacef(re(fmt"{beginSymbol}(.*){endSymbol}"), fmt"{leading} $1")
 
 proc replaceLists(content: string): string =
   result = content.replacef(re("<li>(.*)</li>"), "* $1")
