@@ -59,3 +59,4 @@ if isMainModule:
       close(file)
     file.writeLine(result)
     echo target, " converted!"
+    linkId = 1
