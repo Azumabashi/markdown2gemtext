@@ -13,12 +13,12 @@ proc replaceHeaders(content: string, level: int): string =
     endSymbol = fmt"</h{level}>"
     leading = "#".repeat(level)
   result = content.replace(re(fmt"{beginSymbol}(.*){endSymbol}"), proc (m: RegexMatch): string =
-    return fmt"{leading} {m.match}"
+    return fmt"{leading} {m.captures[0]}"
   )
 
 proc replaceLists(content: string): string =
   result = content.replace(re("<li>(.*)</li>"), proc (m: RegexMatch): string = 
-    return fmt"* {m.match}"
+    return fmt"* {m.captures[0]}"
   )
   result = result.replace("<ul>", "").replace("</ul>", "")
 
@@ -27,7 +27,7 @@ proc replaceQuotes(content: string): string =
   let quotes = content.findAll(re"<blockquote>(.|\n)*</blockquote>")
   for quote in quotes:
     var parsed = quote.replace(re"</?blockquote>\n?", "").replace(re"<p>((.|\n)*)</p>", proc (m: RegexMatch): string = 
-      return fmt"> {m.match}"
+      return fmt"> {m.captures[0]}"
     ).replace("\n", "\n> ")
     parsed = parsed[0 ..< parsed.len - 2]  # remove last line of ">\n"
     result = result.replace(quote, parsed)
@@ -55,7 +55,7 @@ proc replaceLinks(rawContent: string): string =
 
 proc removePTag(content: string): string =
   result = content.replace(re".*<p>(.*)</p>.*", proc (m: RegexMatch): string = 
-    return m.match
+    return m.captures[0]
   )
 
 proc markdown2gemtext(path: string): string =
