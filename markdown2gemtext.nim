@@ -3,7 +3,6 @@ import markdown
 import nre
 import strformat
 import strutils
-import uri
 
 var linkId = 1
 
