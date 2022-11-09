@@ -17,7 +17,7 @@ $ nim c -r markdown2gemtext path/to/your/markdownFile.md
 
 Sample markdown file is in the `sample` directory.
 
-The output is generated as `gemtext/path/to/your/htmlFile.gmi`.
+The output is generated as `gemtext/path/to/your/markdownFile.gmi`.
 
 ## License
 MIT
