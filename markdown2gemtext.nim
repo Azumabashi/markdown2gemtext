@@ -20,7 +20,6 @@ proc replaceLists(content: string): string =
 proc replaceQuotes(content: string): string =
   result = content
   let quotes = content.findAll(re"<blockquote>(.|\n)*</blockquote>")
-  echo quotes
   for quote in quotes:
     var parsed = quote.replacef(re"</?blockquote>\n?", "").replacef(re"<p>((.|\n)*)</p>", "> $1").replace("\n", "\n> ")
     parsed = parsed[0 ..< parsed.len - 2]  # remove last line of ">\n"
