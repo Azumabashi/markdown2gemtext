@@ -35,6 +35,9 @@ proc replaceLinks(rawContent: string): string =
       linkId += 1
   result = contents.join("\n")
 
+proc removePTag(content: string): string =
+  result = content.replace(re"/?<p>", "")
+
 proc markdown2gemtext(path: string): string =
   var file = open(path, FileMode.fmRead)
   defer:
