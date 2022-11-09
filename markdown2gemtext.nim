@@ -1,6 +1,6 @@
 import os
 import markdown
-import re
+import nre
 import strformat
 import strutils
 import uri
@@ -12,17 +12,23 @@ proc replaceHeaders(content: string, level: int): string =
     beginSymbol = fmt"<h{level}>"
     endSymbol = fmt"</h{level}>"
     leading = "#".repeat(level)
-  result = content.replacef(re(fmt"{beginSymbol}(.*){endSymbol}"), fmt"{leading} $1")
+  result = content.replace(re(fmt"{beginSymbol}(.*){endSymbol}"), proc (m: RegexMatch): string =
+    return fmt"{leading} {m.match}"
+  )
 
 proc replaceLists(content: string): string =
-  result = content.replacef(re("<li>(.*)</li>"), "* $1")
+  result = content.replace(re("<li>(.*)</li>"), proc (m: RegexMatch): string = 
+    return fmt"* {m.match}"
+  )
   result = result.replace("<ul>", "").replace("</ul>", "")
 
 proc replaceQuotes(content: string): string =
   result = content
   let quotes = content.findAll(re"<blockquote>(.|\n)*</blockquote>")
   for quote in quotes:
-    var parsed = quote.replacef(re"</?blockquote>\n?", "").replacef(re"<p>((.|\n)*)</p>", "> $1").replace("\n", "\n> ")
+    var parsed = quote.replace(re"</?blockquote>\n?", "").replace(re"<p>((.|\n)*)</p>", proc (m: RegexMatch): string = 
+      return fmt"> {m.match}"
+    ).replace("\n", "\n> ")
     parsed = parsed[0 ..< parsed.len - 2]  # remove last line of ">\n"
     result = result.replace(quote, parsed)
 
@@ -30,13 +36,18 @@ proc replaceLinks(rawContent: string): string =
   var contents = rawContent.split("\n")
   let regex = re("(.*)<a href=\"(.*)\">(.*)</a>(.*)")
   for i in 0..<contents.len:
-    while contents[i].match(regex):
-      contents[i] = contents[i].replacef(regex, fmt"$1$3[{linkId}]$4\n=> $2 {linkId}: $2\n")
+    while contents[i].match(regex).isSome:
+      contents[i] = contents[i].replace(regex, proc (m: RegexMatch): string = 
+        let match = m.match
+        return fmt"{match[0]}{match[3]}[{linkId}]{match[4]}\n=> {match[2]} {linkId}: {match[2]}\n"
+      )
       linkId += 1
   result = contents.join("\n")
 
 proc removePTag(content: string): string =
-  result = content.replacef(re".*<p>(.*)</p>.*", "$1")
+  result = content.replace(re".*<p>(.*)</p>.*", proc (m: RegexMatch): string = 
+    return m.match
+  )
 
 proc markdown2gemtext(path: string): string =
   var file = open(path, FileMode.fmRead)
@@ -56,7 +67,9 @@ if isMainModule:
   for target in os.commandLineParams():
     let
       result = markdown2gemtext(target)
-      savePath = "gemtext/" & target.replacef(re"(.*\.)md", "$1gmi")
+      savePath = "gemtext/" & target.replace(re"(.*\.)md", proc (m: RegexMatch): string = 
+        return fmt"{m.match}.gmi"
+      )
       dirPath = splitFile(savePath).dir
     createDir(dirPath)
     var file = open(savePath, FileMode.fmWrite)
