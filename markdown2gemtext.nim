@@ -44,8 +44,11 @@ proc replaceLinks(rawContent: string): string =
     while contents[i].match(regex).isSome:
       isMatched = true
       contents[i] = contents[i].replace(regex, proc (m: RegexMatch): string = 
-        let match = m.captures
-        links.add(fmt"=> {match[1]} {linkId}: {match[1]}")
+        let 
+          match = m.captures
+          isLink2Gemini = match[1].endsWith(".gmi") or match[1].startsWith("gemini://")
+          protocolShow = if not isLink2Gemini: " (outer of gemini)" else: ""
+        links.add(fmt"=> {match[1]} {linkId}: {match[1]}{protocolShow}")
         return fmt"{match[0]}{match[2]}[{linkId}]{match[3]}"
       )
       linkId += 1
