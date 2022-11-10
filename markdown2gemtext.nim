@@ -122,5 +122,5 @@ if isMainModule:
     defer:
       close(file)
     file.writeLine(result)
-    echo target, " converted!"
+    echo target, " => ", savePath
     linkId = 1
