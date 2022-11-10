@@ -10,7 +10,7 @@ This is the Markdown content.
 
 link to [some page](https://www.example.com) and [other page](https://www.google.com).
 
-link to [markdown file](/foo/)
+link to [markdown file](/foo/) and [markdown file not included to convert target](/bar/).
 
 link to [gemini contents](gemini://gemini.circumlunar.space).
 
