@@ -8,6 +8,7 @@ import lib/types
 
 var linkId = 1
 const baseUri = "https://azumabashi.dev"
+let targets: seq[string] = @[]
 
 proc replaceHeaders(content: string, level: int): string =
   let
@@ -60,7 +61,7 @@ proc replaceLinks(rawContent: string, filepath: string): string =
         let 
           parsedUri = address.parseUri
           refersTo = splitFile(filepath).dir & "/" & address[1..<address.len-1] & ".md"
-          isLink2Gemini = match[1].endsWith(".gmi") or parsedUri.scheme == "gemini" or refersTo in commandLineParams()
+          isLink2Gemini = match[1].endsWith(".gmi") or parsedUri.scheme == "gemini" or refersTo in targets
           protocolShow = if not isLink2Gemini: " (out of gemini)" else: ""
         if isLink2Gemini:
           address = address[0..<address.len-1] & ".gmi"
