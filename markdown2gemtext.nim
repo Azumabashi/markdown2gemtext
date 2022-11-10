@@ -11,6 +11,7 @@ var
   linkId = 1
   targets: seq[string] = @[]
   relativeAddresses: seq[string] = @[]
+  baseUri = ""
 
 proc replaceHeaders(content: string, level: int): string =
   let
@@ -67,6 +68,8 @@ proc replaceLinks(rawContent: string, filepath: string, searchDir: string): stri
           protocolShow = if not isLink2Gemini: " (out of gemini)" else: ""
         if isLink2Gemini and not parsedUri.isAbsolute:
           address = address[0..<address.len-1] & ".gmi"
+        elif not parsedUri.isAbsolute:
+          address = baseUri & address
         links.add(fmt"=> {address} {linkId}: {address}{protocolShow}")
         return fmt"{match[0]}{match[2]}[{linkId}]{match[3]}"
       )
@@ -96,6 +99,7 @@ proc markdown2gemtext*(path: string, searchDir: string): string =
 
 if isMainModule:
   let searchDir = commandLineParams()[0]
+  baseUri = commandLineParams()[1]
   for file in walkDirRec(searchDir):
     if file.endsWith(".md"):
       targets.add(file)
