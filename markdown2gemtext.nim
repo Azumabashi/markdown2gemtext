@@ -41,7 +41,8 @@ proc parseUri(uri: string): UriInfo =
   result = UriInfo(
     scheme: parsedUri.scheme,
     hostname: parsedUri.hostname,
-    path: parsedUri.path
+    path: parsedUri.path,
+    isAbsolute: parsedUri.isAbsolute
   )
 
 proc replaceLinks(rawContent: string, filepath: string, searchDir: string): string =
