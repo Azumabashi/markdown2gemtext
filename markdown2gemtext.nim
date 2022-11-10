@@ -9,7 +9,9 @@ import sequtils
 
 var linkId = 1
 const baseUri = "https://azumabashi.dev"
-var targets: seq[string] = @[]
+var 
+  targets: seq[string] = @[]
+  relativeAddresses: seq[string] = @[]
 
 proc replaceHeaders(content: string, level: int): string =
   let
@@ -100,7 +102,7 @@ if isMainModule:
     if file.endsWith(".md"):
       targets.add(file)
   
-  let relativeAddresses = targets.map(proc(path: string): string = 
+  relativeAddresses = targets.map(proc(path: string): string = 
     path[searchDir.len ..< path.len-3] & "/"
   )
   
