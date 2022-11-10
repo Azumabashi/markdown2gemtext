@@ -8,9 +8,11 @@ This is the Markdown content.
 - itemize
 - itemize
 
-link to [some page](www.example.com) and [other page](www.google.com).
+link to [some page](https://www.example.com) and [other page](https://www.google.com).
 
 link to [markdown file](/foo/)
+
+link to [gemini contents](gemini://gemini.circumlunar.space).
 
 > lorem lipsum
 > some lines
