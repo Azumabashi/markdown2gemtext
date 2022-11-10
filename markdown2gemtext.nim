@@ -98,8 +98,10 @@ proc markdown2gemtext*(path: string, searchDir: string): string =
              .removePTag
 
 if isMainModule:
-  let searchDir = commandLineParams()[0]
-  baseUri = commandLineParams()[1]
+  let 
+    argv = commandLineParams()
+    searchDir = argv[0]
+  baseUri = argv[1]
   for file in walkDirRec(searchDir):
     if file.endsWith(".md"):
       targets.add(file)
