@@ -44,7 +44,7 @@ proc parseUri(uri: string): UriInfo =
     path: parsedUri.path
   )
 
-proc replaceLinks(rawContent: string, filepath: string): string =
+proc replaceLinks(rawContent: string, filepath: string, searchDir: string): string =
   var 
     contents = rawContent.split("\n")
     links: seq[string] = @[]
@@ -89,7 +89,7 @@ proc markdown2gemtext(path: string, searchDir: string): string =
              .replaceHeaders(3)
              .replaceLists
              .replaceQuotes
-             .replaceLinks(path)
+             .replaceLinks(path, searchDir)
              .removePTag
 
 if isMainModule:
