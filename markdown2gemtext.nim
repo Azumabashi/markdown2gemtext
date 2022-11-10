@@ -53,7 +53,7 @@ proc replaceLinks(rawContent: string, filepath: string, searchDir: string): stri
     contents = rawContent.split("\n")
     links: seq[string] = @[]
     isMatched = false
-  let regex = re("(.*?)<a href=\"(.*?)\">(.*?)</a>(.+)")
+  let regex = re("(.*?)<a href=\"(.*?)\">(.*?)</a>(.*)")
   for i in 0..<contents.len:
     isMatched = false
     links = @[]
