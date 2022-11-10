@@ -113,7 +113,7 @@ if isMainModule:
   for target in targets:
     let
       result = markdown2gemtext(target, searchDir)
-      savePath = if argv.len >= 3: argv[2] else: "gemtext/" & target.replace(re"(.*\.)md", proc (m: RegexMatch): string = 
+      savePath = (if argv.len >= 3: argv[2] else: "gemtext")  & "/" & target.replace(re"(.*\.)md", proc (m: RegexMatch): string = 
         return fmt"{m.captures[0]}gmi"
       )
       dirPath = splitFile(savePath).dir
