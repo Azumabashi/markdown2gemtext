@@ -8,7 +8,7 @@ import lib/types
 
 var linkId = 1
 const baseUri = "https://azumabashi.dev"
-let targets: seq[string] = @[]
+var targets: seq[string] = @[]
 
 proc replaceHeaders(content: string, level: int): string =
   let
@@ -93,7 +93,11 @@ proc markdown2gemtext(path: string): string =
              .removePTag
 
 if isMainModule:
-  for target in os.commandLineParams():
+  let searchDir = commandLineParams()[0]
+  for file in walkDirRec(searchDir):
+    targets.add(file)
+  
+  for target in targets:
     let
       result = markdown2gemtext(target)
       savePath = "gemtext/" & target.replace(re"(.*\.)md", proc (m: RegexMatch): string = 
