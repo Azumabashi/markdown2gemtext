@@ -78,7 +78,7 @@ proc removePTag(content: string): string =
     return m.captures[0]
   )
 
-proc markdown2gemtext(path: string): string =
+proc markdown2gemtext(path: string, searchDir: string): string =
   var file = open(path, FileMode.fmRead)
   defer:
     close(file)
@@ -100,7 +100,7 @@ if isMainModule:
   
   for target in targets:
     let
-      result = markdown2gemtext(target)
+      result = markdown2gemtext(target, searchDir)
       savePath = "gemtext/" & target.replace(re"(.*\.)md", proc (m: RegexMatch): string = 
         return fmt"{m.captures[0]}gmi"
       )
