@@ -95,7 +95,8 @@ proc markdown2gemtext(path: string): string =
 if isMainModule:
   let searchDir = commandLineParams()[0]
   for file in walkDirRec(searchDir):
-    targets.add(file)
+    if file.endsWith(".md"):
+      targets.add(file)
   
   for target in targets:
     let
