@@ -12,7 +12,7 @@ Script converts from markdown to gemtext implemented with Nim.
 ```
 $ git clone https://github.com/Azumabashi/markdown2gemtext
 $ cd markdown2gemtext
-$ nim c -r markdown2gemtext dir
+$ nim c -r markdown2gemtext dir https://your.domain
 ```
 
 where `dir` is a path to directory which convert target markdown files are saved.
