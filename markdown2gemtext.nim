@@ -56,7 +56,7 @@ proc replaceLinks(rawContent: string, filepath: string): string =
       isMatched = true
       contents[i] = contents[i].replace(regex, proc (m: RegexMatch): string = 
         let match = m.captures
-        var address = if match[1].contains(baseUri): match[1] else: baseUri & match[1]
+        var address = if match[1].parseUri.hostname.len > 0: match[1] else: baseUri & match[1]
         let 
           parsedUri = address.parseUri
           refersTo = splitFile(filepath).dir & "/" & address[1..<address.len-1] & ".md"
