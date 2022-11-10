@@ -7,9 +7,8 @@ import uri
 import lib/types
 import sequtils
 
-var linkId = 1
-const baseUri = "https://azumabashi.dev"
 var 
+  linkId = 1
   targets: seq[string] = @[]
   relativeAddresses: seq[string] = @[]
 
