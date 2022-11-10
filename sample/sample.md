@@ -7,6 +7,7 @@ This is the Markdown content.
 - itemize
 - itemize
 - itemize
+- [itemize with link](https://www.tsukuba.ac.jp)
 
 link to [some page](https://www.example.com) and [other page](https://www.google.com).
 
