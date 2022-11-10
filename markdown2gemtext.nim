@@ -5,6 +5,7 @@ import strformat
 import strutils
 import uri
 import lib/types
+import sequtils
 
 var linkId = 1
 const baseUri = "https://azumabashi.dev"
@@ -98,6 +99,10 @@ if isMainModule:
   for file in walkDirRec(searchDir):
     if file.endsWith(".md"):
       targets.add(file)
+  
+  let relativeAddresses = targets.map(proc(path: string): string = 
+    path[searchDir.len ..< path.len-3] & "/"
+  )
   
   for target in targets:
     let
