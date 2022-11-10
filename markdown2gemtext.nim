@@ -80,7 +80,7 @@ proc removePTag(content: string): string =
     return m.captures[0]
   )
 
-proc markdown2gemtext(path: string, searchDir: string): string =
+proc markdown2gemtext*(path: string, searchDir: string): string =
   var file = open(path, FileMode.fmRead)
   defer:
     close(file)
