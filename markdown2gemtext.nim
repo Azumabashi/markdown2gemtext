@@ -3,6 +3,8 @@ import markdown
 import nre
 import strformat
 import strutils
+import uri
+import lib/types
 
 var linkId = 1
 
@@ -30,6 +32,15 @@ proc replaceQuotes(content: string): string =
     ).replace("\n", "\n> ")
     parsed = parsed[0 ..< parsed.len - 2]  # remove last line of ">\n"
     result = result.replace(quote, parsed)
+
+proc parseUri(uri: string): UriInfo = 
+  var parsedUri = initUri()
+  uri.parseUri(parsedUri)
+  result = UriInfo(
+    scheme: parsedUri.scheme,
+    hostname: parsedUri.hostname,
+    path: parsedUri.path
+  )
 
 proc replaceLinks(rawContent: string, filepath: string): string =
   var 
