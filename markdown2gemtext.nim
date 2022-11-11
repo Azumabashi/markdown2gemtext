@@ -12,15 +12,6 @@ var
   relativeAddresses: seq[string] = @[]
   baseUri = ""
 
-proc replaceHeaders(content: string, level: int): string =
-  let
-    beginSymbol = fmt"<h{level}>"
-    endSymbol = fmt"</h{level}>"
-    leading = "#".repeat(level)
-  result = content.replace(re(fmt"{beginSymbol}(.*){endSymbol}"), proc (m: RegexMatch): string =
-    return fmt"{leading} {m.captures[0]}"
-  )
-
 proc replaceLists(content: string): string =
   result = content.replace(re("- (.*)"), proc (m: RegexMatch): string = 
     return fmt"* {m.captures[0]}"
@@ -87,9 +78,6 @@ proc markdown2gemtext*(path: string, searchDir: string): string =
   defer:
     close(file)
   result = file.readAll()
-             .replaceHeaders(1)
-             .replaceHeaders(2)
-             .replaceHeaders(3)
              .replaceLists
              .replaceQuotes
              .replaceLinks(path, searchDir)
