@@ -4,8 +4,6 @@ Script converts from markdown to gemtext implemented with Nim.
 ## Dependencies
 
 - Nim
-- markdown
-  - install with `nimble install markdown`
 
 ## Usage
 
