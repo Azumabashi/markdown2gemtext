@@ -33,7 +33,10 @@ proc replaceLinks(rawContent: string, filepath: string, searchDir: string): stri
     contents = rawContent.split("\n")
     links: seq[string] = @[]
     isMatched = false
-  let regex = re"(.*?)\[(.*?)\]\((.*?)\)(.*)"
+  let 
+    regex = re"(.*?)\[(.*?)\]\((.*?)\)(.*)"
+    refOpenMark = "+++"
+    refCloseMark = "---"
   for i in 0..<contents.len:
     isMatched = false
     links = @[]
@@ -51,10 +54,11 @@ proc replaceLinks(rawContent: string, filepath: string, searchDir: string): stri
         elif not parsedUri.isAbsolute:
           address = baseUri & address
         links.add(fmt"=> {address} {linkId}: {address}{protocolShow}")
-        return fmt"{match[0]}{match[1]}[{linkId}]{match[3]}"
+        return fmt"{match[0]}{match[1]}{refOpenMark}{linkId}{refCloseMark}{match[3]}"
       )
       linkId += 1
     if isMatched:
+      contents[i] = contents[i].replace(refOpenMark, "[").replace(refCloseMark, "]")
       contents[i] = contents[i] & "\n" & links.join("\n") & "\n"
   result = contents.join("\n")
 
