@@ -23,7 +23,7 @@ proc replaceHeaders(content: string, level: int): string =
   )
 
 proc replaceLists(content: string): string =
-  result = content.replace(re("<li>(.*)</li>"), proc (m: RegexMatch): string = 
+  result = content.replace(re("- (.*)"), proc (m: RegexMatch): string = 
     return fmt"* {m.captures[0]}"
   )
   result = result.replace("<ul>", "").replace("</ul>", "")
