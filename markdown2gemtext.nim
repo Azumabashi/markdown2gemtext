@@ -18,16 +18,6 @@ proc replaceLists(content: string): string =
   )
   result = result.replace("<ul>", "").replace("</ul>", "")
 
-proc replaceQuotes(content: string): string =
-  result = content
-  let quotes = content.findAll(re"<blockquote>(.|\n)*</blockquote>")
-  for quote in quotes:
-    var parsed = quote.replace(re"</?blockquote>\n?", "").replace(re"<p>((.|\n)*)</p>", proc (m: RegexMatch): string = 
-      return fmt"> {m.captures[0]}"
-    ).replace("\n", "\n> ")
-    parsed = parsed[0 ..< parsed.len - 2]  # remove last line of ">\n"
-    result = result.replace(quote, parsed)
-
 proc parseUri(uri: string): UriInfo = 
   var parsedUri = initUri()
   uri.parseUri(parsedUri)
@@ -79,7 +69,6 @@ proc markdown2gemtext*(path: string, searchDir: string): string =
     close(file)
   result = file.readAll()
              .replaceLists
-             .replaceQuotes
              .replaceLinks(path, searchDir)
              .removePTag
 
