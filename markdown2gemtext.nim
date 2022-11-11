@@ -53,7 +53,7 @@ proc replaceLinks(rawContent: string, filepath: string, searchDir: string): stri
     contents = rawContent.split("\n")
     links: seq[string] = @[]
     isMatched = false
-  let regex = re("(.*?)<a href=\"(.*?)\">(.*?)</a>(.*)")
+  let regex = re"(.*?)\[(.*?)\]\((.*?)\)(.*)"
   for i in 0..<contents.len:
     isMatched = false
     links = @[]
@@ -61,17 +61,17 @@ proc replaceLinks(rawContent: string, filepath: string, searchDir: string): stri
       isMatched = true
       contents[i] = contents[i].replace(regex, proc (m: RegexMatch): string = 
         let match = m.captures
-        var address = match[1]
+        var address = match[2]
         let 
           parsedUri = address.parseUri
-          isLink2Gemini = match[1].endsWith(".gmi") or parsedUri.scheme == "gemini" or address in relativeAddresses
+          isLink2Gemini = address.endsWith(".gmi") or parsedUri.scheme == "gemini" or address in relativeAddresses
           protocolShow = if not isLink2Gemini: " (out of gemini)" else: ""
         if isLink2Gemini and not parsedUri.isAbsolute:
           address = address[0..<address.len-1] & ".gmi"
         elif not parsedUri.isAbsolute:
           address = baseUri & address
         links.add(fmt"=> {address} {linkId}: {address}{protocolShow}")
-        return fmt"{match[0]}{match[2]}[{linkId}]{match[3]}"
+        return fmt"{match[0]}{match[1]}[{linkId}]{match[3]}"
       )
       linkId += 1
     if isMatched:
