@@ -1,5 +1,4 @@
 import os
-import markdown
 import nre
 import strformat
 import strutils
@@ -87,8 +86,7 @@ proc markdown2gemtext*(path: string, searchDir: string): string =
   var file = open(path, FileMode.fmRead)
   defer:
     close(file)
-  let html = markdown(file.readAll())
-  result = html
+  result = file.readAll()
              .replaceHeaders(1)
              .replaceHeaders(2)
              .replaceHeaders(3)
